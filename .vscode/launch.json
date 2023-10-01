@@ -1,0 +1,55 @@
+{
+  "configurations": [
+    {
+      "name": "Gateway",
+      "program": "${workspaceFolder}/gateway/node_modules/nodemon/bin/nodemon.js",
+      "request": "launch",
+      "skipFiles": ["<node_internals>/**"],
+      "args": ["${workspaceFolder}/gateway/index.js"],
+      "env": {
+        "NODE_ENV": "dev"
+      },
+      "console": "integratedTerminal",
+      "type": "node"
+    },
+    {
+      "name": "Customer",
+      "program": "${workspaceFolder}/customer/node_modules/nodemon/bin/nodemon.js",
+      "request": "launch",
+      "skipFiles": ["<node_internals>/**"],
+      "args": ["${workspaceFolder}/customer/src/index.js"],
+      "env": {
+        "NODE_ENV": "prod"
+      },
+      "envFile": "${workspaceFolder}/customer/.env.dev",
+      "console": "integratedTerminal",
+      "type": "node"
+    },
+    {
+      "name": "Products",
+      "program": "${workspaceFolder}/products/node_modules/nodemon/bin/nodemon.js",
+      "request": "launch",
+      "skipFiles": ["<node_internals>/**"],
+      "args": ["${workspaceFolder}/products/src/index.js"],
+      "env": {
+        "NODE_ENV": "prod"
+      },
+      "envFile": "${workspaceFolder}/products/.env.dev",
+      "console": "integratedTerminal",
+      "type": "node"
+    },
+    {
+      "name": "Shopping",
+      "program": "${workspaceFolder}/shopping/node_modules/nodemon/bin/nodemon.js",
+      "request": "launch",
+      "skipFiles": ["<node_internals>/**"],
+      "args": ["${workspaceFolder}/shopping/src/index.js"],
+      "env": {
+        "NODE_ENV": "prod"
+      },
+      "envFile": "${workspaceFolder}/shopping/.env.dev",
+      "console": "integratedTerminal",
+      "type": "node"
+    }
+  ]
+}
