@@ -2,7 +2,12 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const amqplib = require("amqplib");
 
-const { APP_SECRET, MESSAGE_BROKER_URL, EXCHANGE_NAME } = require("../config");
+const {
+  APP_SECRET,
+  MESSAGE_BROKER_URL,
+  EXCHANGE_NAME,
+  QUEUE_NAME,
+} = require("../config");
 
 //Utility functions
 module.exports.GenerateSalt = async () => {
@@ -93,6 +98,7 @@ module.exports.CreateChannel = async () => {
 module.exports.PublishMessage = async (channel, binding_key, message) => {
   try {
     await channel.publish(EXCHANGE_NAME, binding_key, Buffer.from(message));
+    console.log("Sent: ", message);
   } catch (err) {
     throw err;
   }
@@ -104,7 +110,7 @@ module.exports.SubscribeMessage = async (channel, service, binding_key) => {
     const appQueue = await channel.assertQueue(QUEUE_NAME);
 
     channel.bindQueue(appQueue.queue, EXCHANGE_NAME, binding_key);
-    channel.consume(appQueue, (data) => {
+    channel.consume(appQueue.queue, (data) => {
       console.log("Recieved data");
       console.log(data.content.toString());
       channel.ack(data);
