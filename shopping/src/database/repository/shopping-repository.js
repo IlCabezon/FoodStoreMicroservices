@@ -12,9 +12,7 @@ class ShoppingRepository {
 
   async Orders(customerId) {
     try {
-      const orders = await OrderModel.find({ customerId }).populate(
-        "items.product"
-      );
+      const orders = await OrderModel.find({ customerId })
       return orders;
     } catch (err) {
       throw APIError(

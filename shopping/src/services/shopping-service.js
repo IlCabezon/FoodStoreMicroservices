@@ -55,6 +55,8 @@ class ShoppingService {
   }
 
   async SubscribeEvents(payload) {
+    payload = JSON.parse(payload);
+
     const { event, data } = payload;
 
     const { userId, product, qty } = data;
@@ -80,7 +82,7 @@ class ShoppingService {
           order,
         },
       };
-      return FormateData(payload);
+      return payload;
     } else {
       return FormateData({ error: "No Order available" });
     }

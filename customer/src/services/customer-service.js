@@ -122,7 +122,7 @@ class CustomerService {
       const wishlistResult = await this.repository.AddWishlistItem(
         customerId,
         product
-      );
+      ); 
       return FormateData(wishlistResult);
     } catch (err) {
       throw new APIError("Data Not found", err);
@@ -156,6 +156,8 @@ class CustomerService {
   }
 
   async SubscribeEvents(payload) {
+    payload = JSON.parse(payload);
+
     const { event, data } = payload;
 
     const { userId, product, order, qty } = data;

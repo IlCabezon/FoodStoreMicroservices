@@ -92,7 +92,10 @@ module.exports.SubscribeMessage = async (channel, service, binding_key) => {
     channel.bindQueue(appQueue.queue, EXCHANGE_NAME, binding_key);
     channel.consume(appQueue.queue, (data) => {
       console.log("Recieved data");
-      console.log(data.content.toString());
+
+      const content = data.content.toString()
+      console.log(content);
+      service.SubscribeEvents(content)
       channel.ack(data);
     });
   } catch (err) {
