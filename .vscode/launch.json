@@ -1,6 +1,6 @@
 {
   "configurations": [
-    {
+    /* {
       "name": "Gateway",
       "program": "${workspaceFolder}/gateway/node_modules/nodemon/bin/nodemon.js",
       "request": "launch",
@@ -11,7 +11,7 @@
       },
       "console": "integratedTerminal",
       "type": "node"
-    },
+    }, */
     {
       "name": "Customer",
       "program": "${workspaceFolder}/customer/node_modules/nodemon/bin/nodemon.js",
