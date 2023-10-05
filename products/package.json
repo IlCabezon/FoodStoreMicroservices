@@ -19,7 +19,7 @@
     "nodemon": "^3.0.1"
   },
   "scripts": {
-    "start": "node  src/index.js",
+    "start": "node --watch src/index.js",
     "dev": "cross-env NODE_ENV=dev node --watch src/index.js"
   },
   "keywords": [],
