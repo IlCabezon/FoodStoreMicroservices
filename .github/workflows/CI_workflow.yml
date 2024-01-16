@@ -45,3 +45,15 @@ jobs:
       run: |
         pnpm install
         pnpm run test
+
+    - name: Test Products Service
+      working-directory: ./products
+      run: |
+        pnpm install
+        pnpm run test
+
+    - name: Test Shopping Service
+      working-directory: ./shopping
+      run: |
+        pnpm install
+        pnpm run test
