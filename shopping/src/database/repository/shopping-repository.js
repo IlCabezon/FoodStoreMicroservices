@@ -5,82 +5,60 @@ const {
   BadRequestError,
   STATUS_CODES,
 } = require("../../utils/app-errors");
+const _ = require("lodash");
 
 //Dealing with data base operations
 class ShoppingRepository {
   // payment
 
+  // Cart
+  async Cart(customerId) {
+    return CartModel.findOne({
+      customerId,
+    });
+  }
+
+  async ManageCart(customerId, product, qty, isRemove) {
+    const cart = await CartModel.findOne({ customerId });
+    if (cart) {
+      if (isRemove) {
+        // handle remove
+        const cartItems = _.filter(
+          cart.items,
+          (item) => item.product._id !== product.id
+        );
+
+        cart.items = cartItems;
+      } else {
+        const cartIndex = _.findIndex(cart.items, {
+          product: { _id: product._id },
+        });
+        if (cartIndex > -1) {
+          cart.items[cartIndex].unit = qty;
+        } else {
+          cart.items.push({ product: { ...product }, unit: qty });
+        }
+      }
+      return await cart.save();
+    } else {
+      // create a new one
+      return await CartModel.create({
+        customerId,
+        items: [{ product: { ...product }, unit: qty }],
+      });
+    }
+  }
+
+  // Order
   async Orders(customerId) {
     try {
-      const orders = await OrderModel.find({ customerId })
+      const orders = await OrderModel.find({ customerId });
       return orders;
     } catch (err) {
       throw APIError(
         "API Error",
         STATUS_CODES.INTERNAL_ERROR,
         "Unable to Find Orders"
-      );
-    }
-  }
-
-  async Cart(customerId) {
-    try {
-      const cartItems = await CartModel.find({
-        customerId,
-      });
-
-      if (cartItems) {
-        return cartItems;
-      }
-
-      throw new Error("data not Found!");
-    } catch (err) {
-      throw err;
-    }
-  }
-
-  async AddCartItem(customerId, item, qty, isRemove) { 
-    try {
-      const cart = await CartModel.findOne({ customerId });
-
-      const { _id } = item;
-
-      if (cart) {
-        let isExist = false;
-
-        let cartItems = cart.items;
-
-        if (cartItems.length > 0) {
-          cartItems.map((item) => {
-            if (item.product._id.toString() === _id.toString()) {
-              if (isRemove) {
-                cartItems.splice(cartItems.indexOf(item), 1);
-              } else {
-                item.unit = qty;
-              }
-              isExist = true;
-            }
-          });
-
-          if (!isExist && !isRemove) {
-            cartItems.push({ product: { ...item }, unit: qty });
-          }
-
-          cart.items = cartItems;
-
-          return cart.save();
-        }
-      } else {
-        return await CartModel.create({
-          customerId,
-          items: [{ product: { ...item }, unit: qty }],
-        });
-      }
-    } catch (err) {
-      throw APIError(
-        "API Error",
-        STATUS_CODES.INTERNAL_ERROR,
-        "Unable to Create Cart"
       );
     }
   }

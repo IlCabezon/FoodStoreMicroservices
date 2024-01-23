@@ -19,7 +19,7 @@
       "skipFiles": ["<node_internals>/**"],
       "args": ["${workspaceFolder}/customer/src/index.js"],
       "env": {
-        "NODE_ENV": "prod"
+        "NODE_ENV": "dev"
       },
       "envFile": "${workspaceFolder}/customer/.env.dev",
       "console": "integratedTerminal",
@@ -32,7 +32,7 @@
       "skipFiles": ["<node_internals>/**"],
       "args": ["${workspaceFolder}/products/src/index.js"],
       "env": {
-        "NODE_ENV": "prod"
+        "NODE_ENV": "dev"
       },
       "envFile": "${workspaceFolder}/products/.env.dev",
       "console": "integratedTerminal",
@@ -45,7 +45,7 @@
       "skipFiles": ["<node_internals>/**"],
       "args": ["${workspaceFolder}/shopping/src/index.js"],
       "env": {
-        "NODE_ENV": "prod"
+        "NODE_ENV": "dev"
       },
       "envFile": "${workspaceFolder}/shopping/.env.dev",
       "console": "integratedTerminal",
