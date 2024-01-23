@@ -5,7 +5,7 @@ const {
   BadRequestError,
   STATUS_CODES,
 } = require("../../utils/app-errors");
-const _ = require("loadash");
+const _ = require("lodash");
 
 //Dealing with data base operations
 class ShoppingRepository {
