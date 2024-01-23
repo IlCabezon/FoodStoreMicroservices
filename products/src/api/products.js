@@ -7,6 +7,15 @@ module.exports = (app, channel) => {
 
   RPCObserver("PRODUCT_RPC", service);
 
+  app.get("/", async (req, res, next) => {
+    try {
+      const { data } = await service.GetProducts();
+      return res.status(200).json(data);
+    } catch (err) {
+      return res.status(404).json({ err });
+    }
+  });
+
   app.post("/product/create", async (req, res, next) => {
     try {
       const { name, desc, type, unit, price, available, suplier, banner } =
