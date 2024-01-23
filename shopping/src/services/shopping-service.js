@@ -46,42 +46,45 @@ class ShoppingService {
     }
   }
 
-  // order info
-  async PlaceOrder(userInput) {
-    const { _id, txnNumber } = userInput;
+  // Wishlist
+  async GetWishlist(customerId) {
+    const wishlist = await this.repository.Wishlist(customerId);
+    const products = wishlist?.products ?? [];
 
-    // Verify the txn number with payment logs
+    const ids = products.map((product) => product._id);
 
-    try {
-      const orderResult = await this.repository.CreateNewOrder(_id, txnNumber);
-      return FormateData(orderResult);
-    } catch (err) {
-      throw new APIError("Data Not found", err);
-    }
+    // RPC call
+    const productResponse = await RPCRequest("PRODUCT_RPC", {
+      type: "VIEW_PRODUCTS",
+      data: ids,
+    });
+
+    return productResponse || {};
+  }
+
+  async AddToWishlist(_id, product_id) {
+    const result = await this.repository.ManageWishlist(_id, product_id);
+
+    return result;
+  }
+
+  async RemoveFromWishlist(_id, product_id) {
+    const result = await this.repository.ManageWishlist(_id, product_id, true);
+
+    return result;
+  }
+
+  // Orders
+  async CreateOrder(customerId, txnNumber) {
+    return await this.repository.CreateNewOrder(customerId, txnNumber);
+  }
+
+  async GetOrder(customerId, orderId){
+    return this.repository.Orders(customerId, orderId)
   }
 
   async GetOrders(customerId) {
-    try {
-      const orders = await this.repository.Orders(customerId);
-      return FormateData(orders);
-    } catch (err) {
-      throw new APIError("Data Not found", err);
-    }
-  }
-
-  async ManageCart(customerId, item, qty, isRemove) {
-    try {
-      const cartResult = await this.repository.AddCartItem(
-        customerId,
-        item,
-        qty,
-        isRemove
-      );
-
-      return FormateData(cartResult);
-    } catch (err) {
-      throw err;
-    }
+    return this.repository.Orders(customerId)
   }
 
   async SubscribeEvents(payload) {

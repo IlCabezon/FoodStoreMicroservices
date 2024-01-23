@@ -1,4 +1,4 @@
-const { OrderModel, CartModel } = require("../models");
+const { OrderModel, CartModel, WishlistModel } = require("../models");
 const { v4: uuidv4 } = require("uuid");
 const {
   APIError,
@@ -18,7 +18,7 @@ class ShoppingRepository {
     });
   }
 
-  async ManageCart(customerId, product, qty, isRemove) {
+  async ManageCart(customerId, product, qty, isRemove = false) {
     const cart = await CartModel.findOne({ customerId });
     if (cart) {
       if (isRemove) {
@@ -49,17 +49,46 @@ class ShoppingRepository {
     }
   }
 
+  // Wishlist
+  async Wishlist(customerId) {
+    return WishlistModel.findOne({
+      customerId,
+    });
+  }
+
+  async ManageWishlist(customerId, product_Id, isRemove = false) {
+    const wishlist = await WishlistModel.findOne({ customerId });
+    if (wishlist) {
+      if (isRemove) {
+        const wishlistProducts = _.filter(
+          wishlist.products,
+          (products) => products._id !== product_Id
+        );
+        wishlist.products = wishlistProducts;
+      } else {
+        const wishlistIndex = _.findIndex(wishlist.products, {
+          _id: product_Id,
+        });
+        if (wishlistIndex < 0) {
+          wishlist.products.push({ _id: product_Id });
+        }
+      }
+      return wishlist.save();
+    } else {
+      // create new one
+      return await WishlistModel.create({
+        customerId,
+        products: [{ _id: product_Id }],
+      });
+    }
+  }
+
   // Order
-  async Orders(customerId) {
-    try {
-      const orders = await OrderModel.find({ customerId });
-      return orders;
-    } catch (err) {
-      throw APIError(
-        "API Error",
-        STATUS_CODES.INTERNAL_ERROR,
-        "Unable to Find Orders"
-      );
+  async Orders(customerId, orderId) {
+    if (orderId) {
+      return OrderModel.findOne({ orderId });
+    } else {
+      return OrderModel.find({ customerId });
     }
   }
 
