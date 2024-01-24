@@ -79,12 +79,12 @@ class ShoppingService {
     return await this.repository.CreateNewOrder(customerId, txnNumber);
   }
 
-  async GetOrder(customerId, orderId){
-    return this.repository.Orders(customerId, orderId)
+  async GetOrder(customerId, orderId) {
+    return this.repository.Orders(customerId, orderId);
   }
 
   async GetOrders(customerId) {
-    return this.repository.Orders(customerId)
+    return this.repository.Orders(customerId);
   }
 
   async SubscribeEvents(payload) {
@@ -106,20 +106,36 @@ class ShoppingService {
     }
   }
 
-  async GetOrderPayload(userId, order, event) {
-    if (order) {
-      const payload = {
-        event,
-        data: {
-          userId,
-          order,
-        },
-      };
-      return payload;
-    } else {
-      return FormateData({ error: "No Order available" });
+  async DeleteProfileData(customerId){
+    return this.repository.DeleteProfileData(customerId)
+  }
+
+  async SubscribeEvents(payload) {
+    const parsedPayload = JSON.parse(payload);
+    const { event, data } = parsedPayload;
+    switch (event) {
+      case "DELETE_PROFILE":
+        await this.DeleteProfileData(data.userId);
+        break;
+      default:
+        break;
     }
   }
+
+  // async GetOrderPayload(userId, order, event) {
+  //   if (order) {
+  //     const payload = {
+  //       event,
+  //       data: {
+  //         userId,
+  //         order,
+  //       },
+  //     };
+  //     return payload;
+  //   } else {
+  //     return FormateData({ error: "No Order available" });
+  //   }
+  // }
 }
 
 module.exports = ShoppingService;

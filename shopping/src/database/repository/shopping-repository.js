@@ -138,6 +138,13 @@ class ShoppingRepository {
       );
     }
   }
+
+  async DeleteProfileData(customerId) {
+    return Promise.all([
+      CartModel.findOneAndDelete({ customerId }),
+      WishlistModel.findOneAndDelete({ customerId }),
+    ]);
+  }
 }
 
 module.exports = ShoppingRepository;
