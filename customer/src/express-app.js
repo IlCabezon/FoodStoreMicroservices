@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const { customer } = require("./api");
-const HandleErrors = require("./utils/error-handler");
 
 module.exports = async (app, channel) => {
   app.use(express.json({ limit: "1mb" }));
@@ -11,7 +10,4 @@ module.exports = async (app, channel) => {
 
   //api
   customer(app, channel);
-
-  // error handling
-  app.use(HandleErrors);
 };

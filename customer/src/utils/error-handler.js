@@ -1,7 +1,7 @@
 const { createLogger, transports } = require('winston');
-const { AppError } = require('./app-errors');
+const { BaseError } = require('./app-errors');
 
-
+ 
 const LogErrors = createLogger({
     transports: [
       new transports.Console(),
@@ -26,7 +26,7 @@ class ErrorLogger {
     }
 
     isTrustError(error){
-        if(error instanceof AppError){
+        if(error instanceof BaseError){
             return error.isOperational;
         }else{
             return false;

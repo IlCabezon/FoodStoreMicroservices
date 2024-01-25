@@ -27,7 +27,7 @@ module.exports.ValidatePassword = async (
 
 module.exports.GenerateSignature = async (payload) => {
   try {
-    return await jwt.sign(payload, APP_SECRET, { expiresIn: "30d" });
+    return jwt.sign(payload, APP_SECRET, { expiresIn: "30d" });
   } catch (error) {
     console.log(error);
     return error;
@@ -35,21 +35,15 @@ module.exports.GenerateSignature = async (payload) => {
 };
 
 module.exports.ValidateSignature = async (req) => {
-  try {
-    const signature = req.get("Authorization");
-    console.log(signature);
+  const signature = req.get("Authorization");
 
-    let formattedSignature = signature;
-    if (signature?.includes("Bearer")) {
-      formattedSignature = signature.split(" ")[1];
-    }
-    const payload = await jwt.verify(formattedSignature, APP_SECRET);
-    req.user = payload;
-    return true;
-  } catch (error) {
-    console.log(error);
-    return false;
+  let formattedSignature = signature;
+  if (signature?.includes("Bearer")) {
+    formattedSignature = signature.split(" ")[1];
   }
+  const payload = jwt.verify(formattedSignature, APP_SECRET);
+  req.user = payload;
+  return true;
 };
 
 module.exports.FormateData = (data) => {
@@ -93,9 +87,9 @@ module.exports.SubscribeMessage = async (channel, service, binding_key) => {
     channel.consume(appQueue.queue, (data) => {
       console.log("Recieved data");
 
-      const content = data.content.toString()
+      const content = data.content.toString();
       console.log(content);
-      service.SubscribeEvents(content)
+      service.SubscribeEvents(content);
       channel.ack(data);
     });
   } catch (err) {

@@ -6,7 +6,7 @@ const STATUS_CODES = {
   INTERNAL_ERROR: 500,
 };
 
-class AppError extends Error {
+class BaseError extends Error {
   constructor(
     name,
     statusCode,
@@ -27,7 +27,7 @@ class AppError extends Error {
 }
 
 //api Specific Errors
-class APIError extends AppError {
+class APIError extends BaseError {
   constructor(
     name,
     statusCode = STATUS_CODES.INTERNAL_ERROR,
@@ -39,7 +39,7 @@ class APIError extends AppError {
 }
 
 //400
-class BadRequestError extends AppError {
+class BadRequestError extends BaseError {
   constructor(description = "Bad request", logingErrorResponse) {
     super(
       "NOT FOUND",
@@ -53,7 +53,7 @@ class BadRequestError extends AppError {
 }
 
 //400
-class ValidationError extends AppError {
+class ValidationError extends BaseError {
   constructor(description = "Validation Error", errorStack) {
     super(
       "BAD REQUEST",
@@ -66,7 +66,7 @@ class ValidationError extends AppError {
 }
 
 module.exports = {
-  AppError,
+  BaseError,
   APIError,
   BadRequestError,
   ValidationError,
