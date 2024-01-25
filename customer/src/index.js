@@ -3,6 +3,7 @@ const { PORT } = require("./config");
 const { databaseConnection } = require("./database");
 const expressApp = require("./express-app");
 const { CreateChannel } = require("./utils");
+const ErrorHandler = require("./utils/app-errors");
 
 const StartServer = async () => {
   const app = express();
@@ -14,11 +15,7 @@ const StartServer = async () => {
   await expressApp(app, channel);
 
   // catch all err and format and report to logger
-  app.use((err, req, res, next) => {
-    const statuscode = err.statuscode || 500;
-    const data = err.data || err.message;
-    return res.status(statuscode).json(data)
-  });
+  app.use(ErrorHandler);
 
   app
     .listen(PORT, () => {
