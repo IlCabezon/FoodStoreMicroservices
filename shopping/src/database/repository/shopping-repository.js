@@ -13,82 +13,102 @@ class ShoppingRepository {
 
   // Cart
   async Cart(customerId) {
-    return CartModel.findOne({
-      customerId,
-    });
+    try {
+      return CartModel.findOne({
+        customerId,
+      });
+    } catch (err) {
+      throw new APIError(err);
+    }
   }
 
   async ManageCart(customerId, product, qty, isRemove = false) {
-    const cart = await CartModel.findOne({ customerId });
-    if (cart) {
-      if (isRemove) {
-        // handle remove
-        const cartItems = _.filter(
-          cart.items,
-          (item) => item.product._id !== product.id
-        );
+    try {
+      const cart = await CartModel.findOne({ customerId });
+      if (cart) {
+        if (isRemove) {
+          // handle remove
+          const cartItems = _.filter(
+            cart.items,
+            (item) => item.product._id !== product.id
+          );
 
-        cart.items = cartItems;
-      } else {
-        const cartIndex = _.findIndex(cart.items, {
-          product: { _id: product._id },
-        });
-        if (cartIndex > -1) {
-          cart.items[cartIndex].unit = qty;
+          cart.items = cartItems;
         } else {
-          cart.items.push({ product: { ...product }, unit: qty });
+          const cartIndex = _.findIndex(cart.items, {
+            product: { _id: product._id },
+          });
+          if (cartIndex > -1) {
+            cart.items[cartIndex].unit = qty;
+          } else {
+            cart.items.push({ product: { ...product }, unit: qty });
+          }
         }
+        return await cart.save();
+      } else {
+        // create a new one
+        return await CartModel.create({
+          customerId,
+          items: [{ product: { ...product }, unit: qty }],
+        });
       }
-      return await cart.save();
-    } else {
-      // create a new one
-      return await CartModel.create({
-        customerId,
-        items: [{ product: { ...product }, unit: qty }],
-      });
+    } catch (err) {
+      throw new APIError(err);
     }
   }
 
   // Wishlist
   async Wishlist(customerId) {
-    return WishlistModel.findOne({
-      customerId,
-    });
+    try {
+      return WishlistModel.findOne({
+        customerId,
+      });
+    } catch (err) {
+      throw new APIError(err);
+    }
   }
 
   async ManageWishlist(customerId, product_Id, isRemove = false) {
-    const wishlist = await WishlistModel.findOne({ customerId });
-    if (wishlist) {
-      if (isRemove) {
-        const wishlistProducts = _.filter(
-          wishlist.products,
-          (products) => products._id !== product_Id
-        );
-        wishlist.products = wishlistProducts;
-      } else {
-        const wishlistIndex = _.findIndex(wishlist.products, {
-          _id: product_Id,
-        });
-        if (wishlistIndex < 0) {
-          wishlist.products.push({ _id: product_Id });
+    try {
+      const wishlist = await WishlistModel.findOne({ customerId });
+      if (wishlist) {
+        if (isRemove) {
+          const wishlistProducts = _.filter(
+            wishlist.products,
+            (products) => products._id !== product_Id
+          );
+          wishlist.products = wishlistProducts;
+        } else {
+          const wishlistIndex = _.findIndex(wishlist.products, {
+            _id: product_Id,
+          });
+          if (wishlistIndex < 0) {
+            wishlist.products.push({ _id: product_Id });
+          }
         }
+        return wishlist.save();
+      } else {
+        // create new one
+        return await WishlistModel.create({
+          customerId,
+          products: [{ _id: product_Id }],
+        });
       }
-      return wishlist.save();
-    } else {
-      // create new one
-      return await WishlistModel.create({
-        customerId,
-        products: [{ _id: product_Id }],
-      });
+    } catch (err) {
+      throw new APIError(err);
     }
   }
 
   // Order
   async Orders(customerId, orderId) {
-    if (orderId) {
-      return OrderModel.findOne({ orderId });
-    } else {
-      return OrderModel.find({ customerId });
+    try {
+      if (orderId) {
+        return OrderModel.findOne({ orderId });
+      } else {
+        return OrderModel.find({ customerId });
+      }
+    } catch (err) {
+      throw new APIError(err);
     }
   }
 
@@ -140,10 +160,14 @@ class ShoppingRepository {
   }
 
   async DeleteProfileData(customerId) {
-    return Promise.all([
-      CartModel.findOneAndDelete({ customerId }),
-      WishlistModel.findOneAndDelete({ customerId }),
-    ]);
+    try {
+      return Promise.all([
+        CartModel.findOneAndDelete({ customerId }),
+        WishlistModel.findOneAndDelete({ customerId }),
+      ]);
+    } catch (err) {
+      throw new APIError(err);
+    }
   }
 }
 

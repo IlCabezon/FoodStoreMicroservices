@@ -1,5 +1,6 @@
 const { ShoppingRepository } = require("../database");
-const { FormateData, RPCRequest } = require("../utils");
+const { RPCRequest } = require("../utils");
+const { NotFoundError } = require("../utils/app-errors");
 
 // All Business logic will be here
 class ShoppingService {
@@ -24,7 +25,7 @@ class ShoppingService {
       return data;
     }
 
-    throw new Error("Product data not found!");
+    throw new NotFoundError("Product data not found!");
   }
 
   async RemoveCartItem(customerId, product_id) {
@@ -37,13 +38,7 @@ class ShoppingService {
   }
 
   async GetCart({ _id }) {
-    try {
-      const cartItems = await this.repository.Cart(_id);
-
-      return cartItems;
-    } catch (err) {
-      throw err;
-    }
+    return this.repository.Cart(_id);
   }
 
   // Wishlist
@@ -106,8 +101,8 @@ class ShoppingService {
     }
   }
 
-  async DeleteProfileData(customerId){
-    return this.repository.DeleteProfileData(customerId)
+  async DeleteProfileData(customerId) {
+    return this.repository.DeleteProfileData(customerId);
   }
 
   async SubscribeEvents(payload) {
