@@ -3,12 +3,7 @@ const jwt = require("jsonwebtoken");
 const amqplib = require("amqplib");
 const { v4: uuidv4 } = require("uuid");
 
-const {
-  APP_SECRET,
-  MESSAGE_BROKER_URL,
-  EXCHANGE_NAME,
-  QUEUE_NAME,
-} = require("../config");
+const { APP_SECRET, MESSAGE_BROKER_URL, EXCHANGE_NAME } = require("../config");
 let ampqlibConnection = null;
 
 //Utility functions
@@ -29,12 +24,7 @@ module.exports.ValidatePassword = async (
 };
 
 module.exports.GenerateSignature = async (payload) => {
-  try {
-    return await jwt.sign(payload, APP_SECRET, { expiresIn: "30d" });
-  } catch (error) {
-    console.log(error);
-    return error;
-  }
+  return jwt.sign(payload, APP_SECRET, { expiresIn: "30d" });
 };
 
 module.exports.ValidateSignature = async (req) => {

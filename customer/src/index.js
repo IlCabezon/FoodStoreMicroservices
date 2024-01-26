@@ -3,7 +3,7 @@ const { PORT } = require("./config");
 const { databaseConnection } = require("./database");
 const expressApp = require("./express-app");
 const { CreateChannel } = require("./utils");
-const ErrorHandler = require("./utils/app-errors");
+const ErrorHandler = require("./utils/error-handler");
 
 const StartServer = async () => {
   const app = express();

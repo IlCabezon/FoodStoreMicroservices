@@ -7,68 +7,51 @@ const STATUS_CODES = {
 };
 
 class BaseError extends Error {
-  constructor(
-    name,
-    statusCode,
-    description,
-    isOperational,
-    errorStack,
-    logingErrorResponse
-  ) {
+  constructor(name, statusCode, description) {
     super(description);
     Object.setPrototypeOf(this, new.target.prototype);
     this.name = name;
     this.statusCode = statusCode;
-    this.isOperational = isOperational;
-    this.errorStack = errorStack;
-    this.logError = logingErrorResponse;
     Error.captureStackTrace(this);
   }
 }
 
-//api Specific Errors
+// 500 Internal Error
 class APIError extends BaseError {
-  constructor(
-    name,
-    statusCode = STATUS_CODES.INTERNAL_ERROR,
-    description = "Internal Server Error",
-    isOperational = true
-  ) {
-    super(name, statusCode, description, isOperational);
-  }
-}
-
-//400
-class BadRequestError extends BaseError {
-  constructor(description = "Bad request", logingErrorResponse) {
+  constructor(description = "api error") {
     super(
-      "NOT FOUND",
-      STATUS_CODES.BAD_REQUEST,
-      description,
-      true,
-      false,
-      logingErrorResponse
+      "api internal server error",
+      STATUS_CODES.INTERNAL_ERROR,
+      description
     );
   }
 }
 
-//400
+// 400 Validation Error
 class ValidationError extends BaseError {
-  constructor(description = "Validation Error", errorStack) {
-    super(
-      "BAD REQUEST",
-      STATUS_CODES.BAD_REQUEST,
-      description,
-      true,
-      errorStack
-    );
+  constructor(description = "bad request") {
+    super("bad request", STATUS_CODES.BAD_REQUEST, description);
+  }
+}
+
+// 403 Access Denied
+class AuthorizeError extends BaseError {
+  constructor(description = "access denied") {
+    super("access denied", STATUS_CODES.UN_AUTHORISED, description);
+  }
+}
+
+// 404 Not Found
+class NotFoundError extends BaseError {
+  constructor(description = "not found") {
+    super("not found", STATUS_CODES.NOT_FOUND, description);
   }
 }
 
 module.exports = {
   BaseError,
   APIError,
-  BadRequestError,
   ValidationError,
-  STATUS_CODES,
-};
+  AuthorizeError,
+  NotFoundError
+}

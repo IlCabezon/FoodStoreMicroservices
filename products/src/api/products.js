@@ -8,10 +8,10 @@ module.exports = (app) => {
 
   app.get("/", async (req, res, next) => {
     try {
-      const { data } = await service.GetProducts();
+      const data = await service.GetProducts();
       return res.status(200).json(data);
     } catch (err) {
-      return res.status(404).json({ err });
+      next(err);
     }
   });
 
@@ -20,7 +20,7 @@ module.exports = (app) => {
       const { name, desc, type, unit, price, available, suplier, banner } =
         req.body;
       // validation
-      const { data } = await service.CreateProduct({
+      const data = await service.CreateProduct({
         name,
         desc,
         type,
@@ -40,7 +40,7 @@ module.exports = (app) => {
     const type = req.params.type;
 
     try {
-      const { data } = await service.GetProductsByCategory(type);
+      const data = await service.GetProductsByCategory(type);
       return res.status(200).json(data);
     } catch (err) {
       next(err);
@@ -51,7 +51,7 @@ module.exports = (app) => {
     const productId = req.params.id;
 
     try {
-      const { data } = await service.GetProductDescription(productId);
+      const data = await service.GetProductDescription(productId);
       return res.status(200).json(data);
     } catch (err) {
       next(err);

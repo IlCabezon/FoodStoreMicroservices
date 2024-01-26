@@ -38,17 +38,17 @@ const ErrorHandler = async(err,req,res,next) => {
     
     const errorLogger = new ErrorLogger();
 
-    process.on('uncaughtException', (reason, promise) => {
-        console.log(reason, 'UNHANDLED');
-        throw reason; // need to take care
-    })
+    // process.on('uncaughtException', (reason, promise) => {
+    //     console.log(reason, 'UNHANDLED');
+    //     throw reason; // need to take care
+    // })
 
-    process.on('uncaughtException', (error) => {
-        errorLogger.logError(error);
-        if(errorLogger.isTrustError(err)){
-            //process exist // need restart
-        }
-    })
+    // process.on('uncaughtException', (error) => {
+    //     errorLogger.logError(error);
+    //     if(errorLogger.isTrustError(err)){
+    //         //process exist // need restart
+    //     }
+    // })
     
     // console.log(err.description, '-------> DESCRIPTION')
     // console.log(err.message, '-------> MESSAGE')

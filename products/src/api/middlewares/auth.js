@@ -1,4 +1,5 @@
 const { ValidateSignature } = require('../../utils');
+const { AuthorizeError } = require("../../utils/app-errors")
 
 module.exports = async (req,res,next) => {
     
@@ -7,5 +8,5 @@ module.exports = async (req,res,next) => {
     if(isAuthorized){
         return next();
     }
-    return res.status(403).json({message: 'Not Authorized'})
+    throw new AuthorizeError("not authorized")
 }
